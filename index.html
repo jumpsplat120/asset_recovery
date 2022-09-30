@@ -1,0 +1,72 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script src="https://unpkg.com/pdf-lib"></script>
+    <script src="https://unpkg.com/downloadjs"></script>
+    <script src="main.js"></script>
+  </head>
+
+  <body>
+    <p>Click the button to modify an existing PDF document with <code>pdf-lib</code></p>
+    <button onclick="modifyPdf()">Modify PDF</button>
+    <p class="small">(Your browser will download the resulting file)</p>
+  </body>
+
+  <script>
+    const { degrees, PDFDocument, rgb, StandardFonts } = PDFLib
+
+    async function modifyPdf() {
+        // Fetch an existing PDF document
+
+  	    const doc = await fetch('https://raw.githubusercontent.com/jumpsplat120/asset_recovery/cfb47bbff3169090110dbd0b97de8d5fca0ace0f/2022%20BLANK%20WRIT.pdf')
+            //get bytes
+            .then(res => res.arrayBuffer())
+            //load bytes
+            .then(buf => PDFDocument.load(buf))
+        
+        const font = await doc.embedFont(StandardFonts.TimesRoman);
+        const form = doc.getForm();
+
+        court_address_street = form.getField("court_address_street");
+        
+        court_address_street.setText("Woo");
+
+        for (const field of form.getFields()) {
+            if (field.getText) {
+                console.log(`textbox: ${field.getName()}`)
+            } else if (field.check) {
+                console.log(`checkbox: ${field.getName()}`)
+            } else {
+                console.log(`?: ${field.getName()}`)
+            }
+        }
+        //embed font
+        //const font = await doc.embedFont(StandardFonts.TimesRoman);
+
+        // Get the first page of the document
+        //const pages = doc.getPages()
+        //const firstPage = pages[0]
+
+        // Get the width and height of the first page
+        //const { width, height } = firstPage.getSize()
+
+        //// Draw a string of text diagonally across the first page
+        //firstPage.drawText('This text was added with JavaScript!', {
+        //    x: 5,
+        //    y: height / 2 + 300,
+        //    size: 50,
+        //    font: font,
+        //    color: rgb(0.95, 0.1, 0.1),
+        //    rotate: degrees(-45),
+      //})
+        
+        form.updateFieldAppearances(font);
+
+        // Serialize the PDFDocument to bytes (a Uint8Array)
+        const bytes = await doc.save()
+
+		// Trigger the browser to download the PDF document
+        download(bytes, "pdf-lib_modification_example.pdf", "application/pdf");
+    }
+  </script>
+</html>
