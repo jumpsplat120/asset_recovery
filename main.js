@@ -1,50 +1,536 @@
 const { degrees, PDFDocument, rgb, StandardFonts } = PDFLib
 
+async function main() {
+
+}
+
+function filterDropdown() {
+    const value   = document.getElementById("court_county").value.toUpperCase();
+    const content = document.getElementById("dropdown_content");
+
+    if (value == "") {
+        content.style.display = "none";
+    } else {
+        let showing = [];
+
+        for (const button of content.getElementsByTagName("button")) {
+            if (button.textContent.toUpperCase().indexOf(value) > -1) {
+                showing[showing.length] = button;
+                button.style.display = "";
+            } else {
+                button.style.display = "none";
+            }
+        }
+
+        content.style.display = showing.length > 1 ? "block" : "none";
+        content.style.display = (showing.length == 1 && showing[0].textContent.toUpperCase() == value) ? "none" : "block";
+    }
+}
+
+document.getElementById("court_county").addEventListener("input", e => {
+    filterDropdown();
+});
+
+document.getElementById("court_county").addEventListener("keydown", e => {
+    if (e.key != "Enter") return;
+
+    const value = e.target.value.toUpperCase();
+
+    for (const button of document.getElementById("dropdown_content").getElementsByTagName("button")) {
+        if (button.textContent.toUpperCase().indexOf(value) > -1) {
+            e.target.value = button.textContent;
+            filterDropdown();
+            break;
+        }
+    }
+});
+
+Array.from(document.getElementById("dropdown_content").getElementsByTagName("button")).forEach(button => {
+    button.addEventListener("click", e => {
+        document.getElementById("court_county").value = e.target.textContent;
+        filterDropdown();
+    })
+});
+
+document.getElementById("add_money_maker").addEventListener("click", e => {
+    e.target.setAttribute("data-showing", (Number(e.target.getAttribute("data-showing")) + 1) + "")
+    document.getElementById("main_maker_name").style.display = "block";
+    if (e.target.getAttribute("data-showing") == 2) document.getElementById("money_maker_b").style.display = "block";
+    if (e.target.getAttribute("data-showing") == 3) document.getElementById("money_maker_c").style.display = "block";
+})
+
+document.getElementById("add_money_loser").addEventListener("click", e => {
+    e.target.setAttribute("data-showing", (Number(e.target.getAttribute("data-showing")) + 1) + "")
+    document.getElementById("main_loser_name").style.display = "block";
+    if (e.target.getAttribute("data-showing") == 2) document.getElementById("money_loser_b").style.display = "block";
+    if (e.target.getAttribute("data-showing") == 3) document.getElementById("money_loser_c").style.display = "block";
+})
+
 async function modifyPdf() {
-    const raw  = await fetch('https://raw.githubusercontent.com/jumpsplat120/asset_recovery/cfb47bbff3169090110dbd0b97de8d5fca0ace0f/2022%20BLANK%20WRIT.pdf')
+    const raw  = await fetch('/template.pdf')
     const buf  = await raw.arrayBuffer();
-    const doc  = await PDFDocument.load(arr_buf);
+    const doc  = await PDFDocument.load(buf);
     const font = await doc.embedFont(StandardFonts.TimesRoman);
     const form = doc.getForm();
 
-    court_address_street = form.getField("court_address_street");
+    const data = {};
     
-    court_address_street.setText("Woo");
+    data.money_maker = [];
+    data.money_loser = [];
 
-    for (const field of form.getFields()) {
-        if (field.getText) {
-            console.log(`textbox: ${field.getName()}`)
-        } else if (field.check) {
-            console.log(`checkbox: ${field.getName()}`)
-        } else {
-            console.log(`?: ${field.getName()}`)
+    data.attorney   = {};
+    data.main_loser = {};
+    data.main_maker = {};
+    data.poe        = {};
+    
+    data.attorney.name   = "William D. Schaub, P.C."
+    data.attorney.city   = "";
+    data.attorney.state  = "";
+    data.attorney.street = "";
+    data.attorney.phone  = "";
+    data.attorney.zip    = "";
+    data.attorney.bar    = "770697";
+
+    data.oregon_counties = {
+        ["BAKER"]: {
+            city: "Baker City",
+            zip: "97814",
+            street: "1995 3rd",
+            state: "Oregon",
+            misc: "Ste. #220"
+        },
+        ["BENTON"]: {
+            city: "Corvallis",
+            zip: "97330",
+            street: "120 NW 4th St",
+            state: "Oregon",
+            misc: ""
+        },
+        ["CLACKAMAS"]: {
+            city: "Oregon City",
+            zip: "97045",
+            street: "807 Main St",
+            state: "Oregon",
+            misc: ""
+        },
+        ["CLATSOP"]: {
+            city: "Astoria",
+            zip: "97103",
+            street: "749 Commercial St",
+            state: "Oregon",
+            misc: "Suite 6"
+        },
+        ["COLUMBIA"]: {
+            city: "St Helens",
+            zip: "97051",
+            street: "230 Strand St",
+            state: "Oregon",
+            misc: ""
+        },
+        ["COOS"]: {
+            city: "Coquille",
+            zip: "97423",
+            street: "250 N Baxter St",
+            state: "Oregon",
+            misc: ""
+        },
+        ["CROOK"]: {
+            city: "Prineville",
+            zip: "97754",
+            street: "300 NE 3rd St",
+            state: "Oregon",
+            misc: "#21"
+        },
+        ["CURRY"]: {
+            city: "Gold Beach",
+            zip: "97444",
+            street: "29821 Ellensburg Ave",
+            state: "Oregon",
+            misc: ""
+        },
+        ["DESCHUTES"]: {
+            city: "Bend",
+            zip: "97703",
+            street: "1100 NW Bond St",
+            state: "Oregon",
+            misc: ""
+        },
+        ["DOUGLAS"]: {
+            city: "Roseburg",
+            zip: "97470",
+            street: "1036 SE Douglas Ave",
+            state: "Oregon",
+            misc: "#201"
+        },
+        ["GILLIAM"]: {
+            city: "Condon",
+            zip: "97823",
+            street: "221 S Oregon St",
+            state: "Oregon",
+            misc: ""
+        },
+        ["GRANT"]: {
+            city: "Canyon City",
+            zip: "97820",
+            street: "201 S. Humbolt St",
+            state: "Oregon",
+            misc: ""
+        },
+        ["HARNEY"]: {
+            city: "Burns",
+            zip: "97720",
+            street: "450 N Buena Vista Ave",
+            state: "Oregon",
+            misc: ""
+        },
+        ["HOOD RIVER"]: {
+            city: "Hood River",
+            zip: "97031",
+            street: "309 E State St",
+            state: "Oregon",
+            misc: ""
+        },
+        ["JACKSON"]: {
+            city: "Medford",
+            zip: "97501",
+            street: "100 S Oakdale Ave",
+            state: "Oregon",
+            misc: ""
+        },
+        ["JEFFERSON"]: {
+            city: "Madras",
+            zip: "97741",
+            street: "129 SW E St",
+            state: "Oregon",
+            misc: ""
+        },
+        ["JOSEPHINE"]: {
+            city: "Portland",
+            zip: "97204",
+            street: "1021 SW 4th Ave",
+            state: "Oregon",
+            misc: ""
+        },
+        ["KLAMATH"]: {
+            city: "Klamath Falls",
+            zip: "97601",
+            street: "316 Main St",
+            state: "Oregon",
+            misc: ""
+        },
+        ["LAKE"]: {
+            city: "Lakeview",
+            zip: "97630",
+            street: "513 Center Street",
+            state: "Oregon",
+            misc: ""
+        },
+        ["LANE"]: {
+            city: "Eugene",
+            zip: "97401",
+            street: "125 E 8th Ave",
+            state: "Oregon",
+            misc: ""
+        },
+        ["LINCOLN"]: {
+            city: "Newport",
+            zip: "97365",
+            street: "225 W Olive St",
+            state: "Oregon",
+            misc: "#201"
+        },
+        ["LINN"]: {
+            city: "Albany",
+            zip: "97321",
+            street: "300 SW 4th Ave",
+            state: "Oregon",
+            misc: ""
+        },
+        ["MALHEUR"]: {
+            city: "McMinnville",
+            zip: "97128",
+            street: "535 NE 5th St",
+            state: "Oregon",
+            misc: ""
+        },
+        ["MARION"]: {
+            city: "Salem",
+            zip: "97301",
+            street: "100 High St NE",
+            state: "Oregon",
+            misc: ""
+        },
+        ["MORROW"]: {
+            city: "Heppner",
+            zip: "97836",
+            street: "100 Court Street",
+            state: "Oregon",
+            misc: ""
+        },
+        ["MULTNOMAH"]: {
+            city: "Portland",
+            zip: "97204",
+            street: "1200 SW 1st Ave",
+            state: "Oregon",
+            misc: ""
+        },
+        ["POLK"]: {
+            city: "Dallas",
+            zip: "97338",
+            street: "850 S Main St",
+            state: "Oregon",
+            misc: ""
+        },
+        ["SHERMAN"]: {
+            city: "Moro",
+            zip: "97039",
+            street: "500 Court St",
+            state: "Oregon",
+            misc: ""
+        },
+        ["TILLAMOOK"]: {
+            city: "Tillamook",
+            zip: "97141",
+            street: "201 Laurel Ave",
+            state: "Oregon",
+            misc: ""
+        },
+        ["UMATILLA"]: {
+            city: "Hermiston",
+            zip: "97838",
+            street: "915 SE Columbia Dr",
+            state: "Oregon",
+            misc: ""
+        },
+        ["UNION"]: {
+            city: "La Grande",
+            zip: "97850",
+            street: "1105 K Ave",
+            state: "Oregon",
+            misc: ""
+        },
+        ["WALLOWA"]: {
+            city: "Enterprise",
+            zip: "97828",
+            street: "101 S River Street",
+            state: "Oregon",
+            misc: "Room 204"
+        },
+        ["WASCO"]: {
+            city: "The Dalles",
+            zip: "97058",
+            street: "511 Washington St",
+            state: "Oregon",
+            misc: "#201"
+        },
+        ["WASHINGTON"]: {
+            city: "Hillsboro",
+            zip: "97124",
+            street: "145 NE 2nd Ave",
+            state: "Oregon",
+            misc: ""
+        },
+        ["WHEELER"]: {
+            city: "Fossil",
+            zip: "97830",
+            street: "701 Adams St",
+            state: "Oregon",
+            misc: "#204"
+        },
+        ["YAMHILL"]: {
+            city: "McMinnville",
+            zip: "97128",
+            street: "535 NE 5th St",
+            state: "Oregon",
+            misc: ""
         }
     }
-    //embed font
-    //const font = await doc.embedFont(StandardFonts.TimesRoman);
 
-    // Get the first page of the document
-    //const pages = doc.getPages()
-    //const firstPage = pages[0]
+    data.court_county   = document.getElementById("court_county").value;
+    data.account_number = document.getElementById("account_number").value;
+    data.case_number    = document.getElementById("case_number").value;
+    data.money_maker[0] = document.getElementById("money_maker_a").value;
+    data.money_maker[1] = document.getElementById("money_maker_b").value;
+    data.money_maker[2] = document.getElementById("money_maker_c").value;
+    data.money_loser[0] = document.getElementById("money_loser_a").value;
+    data.money_loser[1] = document.getElementById("money_loser_b").value;
+    data.money_loser[2] = document.getElementById("money_loser_c").value;
+    data.amount_owed    = document.getElementById("amount_owed").value;
+    
+    let count = 0;
+    
+    for (const maker of data.money_maker) {
+        if (maker != "") count++;
+    }
 
-    // Get the width and height of the first page
-    //const { width, height } = firstPage.getSize()
+    data.main_maker.name = count == 1 ? data.money_maker[0] : document.getElementById("main_maker_name").value;
 
-    //// Draw a string of text diagonally across the first page
-    //firstPage.drawText('This text was added with JavaScript!', {
-    //    x: 5,
-    //    y: height / 2 + 300,
-    //    size: 50,
-    //    font: font,
-    //    color: rgb(0.95, 0.1, 0.1),
-    //    rotate: degrees(-45),
-    //})
+    data.main_maker.street = document.getElementById("main_maker_address_street").value;
+    data.main_maker.zip    = document.getElementById("main_maker_address_zip").value;
+    data.main_maker.misc   = document.getElementById("main_maker_address_misc").value;
+
+    count = 0;
+
+    for (const maker of data.money_loser) {
+        if (maker != "") count++;
+    }
+
+    data.main_loser.name = count == 1 ? data.money_loser[0] : document.getElementById("main_loser_name").value;
+
+    data.main_loser.ssn    = document.getElementById("main_loser_ssn").value;
+    data.main_loser.street = document.getElementById("main_loser_address_street").value;
+    data.main_loser.zip    = document.getElementById("main_loser_address_zip").value;
+    data.main_loser.misc   = document.getElementById("main_loser_address_misc").value;
+
+    let location = zips_database[data.main_loser.zip];
+
+    data.main_loser.city   = location.city;
+    data.main_loser.county = location.county_name;
+    data.main_loser.state  = location.state_name;
+
+    location = zips_database[data.main_maker.zip];
+
+    data.main_maker.city   = location.city;
+    data.main_maker.county = location.county_name;
+    data.main_maker.state  = location.state_name;
+    
+    data.poe.name   = document.getElementById("poe_name").value;
+    data.poe.street = document.getElementById("poe_address_street").value;
+    data.poe.zip    = document.getElementById("poe_address_zip").value;
+    data.poe.misc   = document.getElementById("poe_address_misc").value;
+
+    location = zips_database[data.poe.zip];
+
+    data.poe.city   = location.city;
+    data.poe.county = location.county_name;
+    data.poe.state  = location.state_name;
+    
+    data.judgement_date = new Date(document.getElementById("judgement_date").value);
+    data.debt_original = document.getElementById("debt_original").value;
+    data.pre_interest  = document.getElementById("pre_interest").value;
+    data.attorney_fee  = document.getElementById("attorney_fee").value;
+    data.cost_fee      = document.getElementById("cost_fee").value;
+    data.post_interest = document.getElementById("post_interest").value;
+    data.delivery_fee_current = document.getElementById("delivery_fee_current").value;
+    data.issuance_fee_current = document.getElementById("issuance_fee_current").value;
+    data.search_fee_current   = document.getElementById("search_fee_current").value;
+    data.search_fee_previous  = document.getElementById("search_fee_previous").value;
+    data.sheriff_fee  = document.getElementById("sheriff_fee").value;
+    data.party_fee    = document.getElementById("party_fee").value;
+    data.research_fee = document.getElementById("research_fee").value;
+    data.other_fee    = document.getElementById("other_fee").value;
+    data.issuance_fee_previous = document.getElementById("issuance_fee_previous").value;
+    data.delivery_fee_previous = document.getElementById("delivery_fee_previous").value;
+    data.transcript_fee = document.getElementById("transcript_fee").value;
+    data.branch_number  = document.getElementById("branch_number").value;
+    data.calculation_date = new Date(document.getElementById("calculation_date").value);
+
+    form.getField("money_loser_a").setText(data.money_loser[0]);
+    form.getField("money_loser_b").setText(data.money_loser[1]);
+    form.getField("money_loser_c").setText(data.money_loser[2]);
+    form.getField("money_maker_a").setText(data.money_maker[0]);
+    form.getField("money_maker_b").setText(data.money_maker[1]);
+    form.getField("money_maker_c").setText(data.money_maker[2]);
+
+    form.getField("main_maker_name").setText(data.main_maker.name);
+    form.getField("main_maker_address_street").setText(data.main_maker.street);
+    form.getField("main_maker_address_city_state_zip").setText(`${data.main_maker.city}, ${data.main_maker.state}, ${data.main_maker.zip}`);
+    form.getField("main_maker_address_misc").setText(data.main_maker.misc);
+
+    if (data.money_maker.length == 1) {
+        form.getField("money_maker_name_scrunch").setText(data.money_maker[0]);
+    } else {
+        form.getField("money_maker_name_scrunch").setText(data.money_maker[0] + data.money_maker[1] + data.money_maker[2]);
+    }
+
+    form.getField("court_address_street").setText(data.oregon_counties[data.court_county.toUpperCase()].street);
+    form.getField("court_address_city").setText(data.oregon_counties[data.court_county.toUpperCase()].city);
+    form.getField("court_address_county").setText(data.court_county);
+    form.getField("court_address_state").setText(data.oregon_counties[data.court_county.toUpperCase()].state);
+    form.getField("court_address_zip").setText(data.oregon_counties[data.court_county.toUpperCase()].zip);
+
+    form.getField("poe_name").setText(data.poe.name);
+    form.getField("poe_address_street").setText(data.poe.street);
+    form.getField("poe_address_city_state_zip").setText(`${data.main_maker.city}, ${data.main_maker.state}, ${data.main_maker.zip}`);
+    form.getField("poe_address_misc").setText(data.poe.misc);
+
+    form.getField("main_loser_name").setText(data.main_loser.name);
+    form.getField("main_loser_last_four_ssn").setText(data.main_loser.ssn.slice(-4));
+
+    if (!(data.main_loser.street && data.main_loser.city && data.main_loser.state && data.main_loser.zip)) {
+        form.getField("main_loser_address_missing").check();
+    } else {
+        form.getField("main_loser_address_street").setText(data.main_loser.street);
+        form.getField("main_loser_address_city").setText(data.main_loser.city);
+        form.getField("main_loser_address_state").setText(data.main_loser.state);
+        form.getField("main_loser_address_zip").setText(data.main_loser.zip);
+    }
+
+    form.getField("attorney_name").setText(data.attorney.name);
+    form.getField("attorney_address_street")
+    form.getField("attorney_address_city")
+    form.getField("attorney_address_state")
+    form.getField("attorney_address_zip")
+    form.getField("attorney_address_telephone")
+    form.getField("attorney_bar").setText(data.attorney.bar);
+
+    form.getField("case_number").setText(data.case_number);
+    form.getField("account_number").setText(data.account_number);
+    form.getField("amount_owed").setText(data.amount_owed);
+
+    form.getField("judgement_date_day_month").setText(`${data.judgement_date.getUTCMonth() + 1}/${data.judgement_date.getUTCDate()}`);
+    form.getField("judgement_date_year").setText(`${data.judgement_date.getUTCFullYear()}`);
+    
+    form.getField("debt_original").setText(data.debt_original);
+    form.getField("pre_interest").setText(data.pre_interest);
+    form.getField("attorney_fee").setText(data.attorney_fee);
+    form.getField("cost_fee").setText(data.cost_fee);
+    form.getField("post_interest").setText(data.post_interest);
+    form.getField("search_fee_current").setText(data.search_fee_current);
+    form.getField("search_fee_previous").setText(data.search_fee_previous);
+    form.getField("sheriff_fee").setText(data.sheriff_fee);
+    form.getField("party_free").setText(data.party_free);
+    form.getField("research_fee").setText(data.research_fee);
+    form.getField("other_fee").setText(data.other_fee);
+    form.getField("issuance_fee_current").setText(data.issuance_fee_current);
+    form.getField("delivery_fee_current").setText(data.delivery_fee_current);
+    form.getField("issuance_fee_previous").setText(data.issuance_fee_previous);
+    form.getField("transcript_fee").setText(data.transcript_fee);
+
+    const subtotal = Number(data.debt_original) +
+                     Number(data.pre_interest || "0") +
+                     Number(data.attorney_fee || "0") +
+                     Number(data.cost_fee || "0") +
+                     Number(data.post_interest || "0") +
+                     Number(data.search_fee_current || "0") +
+                     Number(data.search_fee_previous || "0") +
+                     Number(data.sheriff_fee || "0") +
+                     Number(data.party_free || "0") +
+                     Number(data.research_fee || "0") +
+                     Number(data.other_fee || "0") +
+                     Number(data.issuance_fee_current || "0") +
+                     Number(data.delivery_fee_current || "0") +
+                     Number(data.issuance_fee_previous || "0") +
+                     Number(data.transcript_fee || "0")
+
+    form.getField("subtotal").setText(subtotal.toLocaleString("en-US", { minimumFractionDigits: 2 }));
+    form.getField("less_payments").setText((data.less_payments || 0).toLocaleString("en-US", { minimumFractionDigits: 2 }));
+    form.getField("total_amount_owed").setText((subtotal - Number(data.less_payments || "0")).toLocaleString("en-US", { minimumFractionDigits: 2 }));
+    form.getField("branch_number").setText(data.branch_number);
+
+    const date = new Date();
+
+    form.getField("todays_date").setText(`${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`);
+    form.getField("calculation_date_year").setText(`${(""+data.calculation_date.getUTCFullYear()).slice(1)}`);
+    form.getField("calculation_date_day_month").setText(`${data.calculation_date.getUTCMonth() + 1}/${data.calculation_date.getUTCDate()}`);
     
     form.updateFieldAppearances(font);
 
-    // Serialize the PDFDocument to bytes (a Uint8Array)
+    //Serialize the PDFDocument to bytes (a Uint8Array)
     const bytes = await doc.save()
 
-    // Trigger the browser to download the PDF document
+    //Trigger the browser to download the PDF document
     download(bytes, "pdf-lib_modification_example.pdf", "application/pdf");
 }
+
+main();

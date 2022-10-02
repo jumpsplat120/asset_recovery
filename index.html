@@ -3,12 +3,131 @@
         <meta charset="utf-8" />
         <script src="https://unpkg.com/pdf-lib"></script>
         <script src="https://unpkg.com/downloadjs"></script>
-        <script src="main.js"></script>
+        <script src="https://unpkg.com/papaparse@5.3.2/papaparse.min.js"></script>
+        <link rel="stylesheet" href="main.css">
+        <script src="zips_database.js"></script>
     </head>
 
     <body>
-        <p>Click the button to modify an existing PDF document with <code>pdf-lib</code></p>
-        <button onclick="modifyPdf()">Modify PDF</button>
+        <label for="court_county">County Court</label>
+        <div id="dropdown_div">
+            <input type="text" placeholder="County" id="court_county">
+            <div id="dropdown_content">
+                <button data-value="baker">Baker</button>
+                <button data-value="benton">Benton</button>
+                <button data-value="clackamas">Clackamas</button>
+                <button data-value="clatsop">Clatsop</button>
+                <button data-value="columbia">Columbia</button>
+                <button data-value="coos">Coos</button>
+                <button data-value="crook">Crook</button>
+                <button data-value="curry">Curry</button>
+                <button data-value="deschutes">Deschutes</button>
+                <button data-value="douglas">Douglas</button>
+                <button data-value="gilliam">Gilliam</button>
+                <button data-value="grant">Grant</button>
+                <button data-value="harney">Harney</button>
+                <button data-value="hood_river">Hood River</button>
+                <button data-value="jackson">Jackson</button>
+                <button data-value="jefferson">Jefferson</button>
+                <button data-value="josephine">Josephine</button>
+                <button data-value="klamath">Klamath</button>
+                <button data-value="lake">Lake</button>
+                <button data-value="lane">Lane</button>
+                <button data-value="lincoln">Lincoln</button>
+                <button data-value="linn">Linn</button>
+                <button data-value="malheur">Malheur</button>
+                <button data-value="marion">Marion</button>
+                <button data-value="morrow">Morrow</button>
+                <button data-value="multnomah">Multnomah</button>
+                <button data-value="polk">Polk</button>
+                <button data-value="sherman">Sherman</button>
+                <button data-value="tillamook">Tillamook</button>
+                <button data-value="umatilla">Umatilla</button>
+                <button data-value="union">Union</button>
+                <button data-value="wallowa">Wallowa</button>
+                <button data-value="wasco">Wasco</button>
+                <button data-value="washington">Washington</button>
+                <button data-value="wheeler">Wheeler</button>
+                <button data-value="yamhill">Yamhill</button>
+            </div>
+        </div>
+        <br>
+        <label for="account_number">Account Number</label>
+        <input placeholder="xxxxxxxxxx" id="account_number" value="12-123456-89">
+        <label for="case_number">Case Number</label>
+        <input placeholder="xxSCxxxxx" id="case_number" value="12SC456789">
+        <br>
+        <label for="money_maker_a">Plantiff</label>
+        <input id="money_maker_a" placeholder="Plantiff Name" value="Plaintiff Bob">
+        <input id="money_maker_b" placeholder="Plantiff Name">
+        <input id="money_maker_c" placeholder="Plantiff Name">
+        <button id="add_money_maker" data-showing="1">Add Plaintiff</button>
+        <br>
+        <label for="money_loser_a">Defendant</label>
+        <input id="money_loser_a" placeholder="Defendant Name" value="Defendant Carol">
+        <input id="money_loser_b" placeholder="Defendant Name">
+        <input id="money_loser_c" placeholder="Defendant Name">
+        <button id="add_money_loser" data-showing="1">Add Plaintiff</button>
+        <br>
+        <label for="amount_owed">Total Amount Owed</label>
+        <input id="amount_owed" value="100.00">
+        <h3>Main Defendant</h3>
+        <input id="main_loser_name" value="Defendant CarolM" placeholder="Defendant Name">
+        <label for="main_loser_ssn">Social Security Number</label>
+        <input id="main_loser_ssn" value="123-45-6789" placeholder="xxxxxxxxx">
+        <label for="main_loser_address_street">Street</label>
+        <input id="main_loser_address_street" value="123 1st Street">
+        <label for="main_loser_address_zip">Postal Code</label>
+        <input id="main_loser_address_zip" value="95401">
+        <label for="main_loser_address_misc">Misc</label>
+        <input id="main_loser_address_misc">
+        <h3>Main Plaintiff</h3>
+        <input id="main_maker_name" value="Plaintiff BobM" placeholder="Plaintiff Name">
+        <label for="main_maker_address_street">Street</label>
+        <input id="main_maker_address_street" value="456 2st Ave">
+        <label for="main_maker_address_zip">Postal Code</label>
+        <input id="main_maker_address_zip" value="95401">
+        <label for="main_maker_address_misc">Misc</label>
+        <input id="main_maker_address_misc">
+        <h3>Place of Employment</h3>
+        <input id="poe_name" value="Mary's Pizza Shack" placeholder="Place of Employment Name">
+        <label for="poe_address_street">Street</label>
+        <input id="poe_address_street" value="789 3rd Ave">
+        <label for="poe_address_zip">Postal Code</label>
+        <input id="poe_address_zip" value="95403">
+        <label for="poe_address_misc">Misc</label>
+        <input id="poe_address_misc">
+        <br>
+        <label for="judgement_date">Judgement Date</label>
+        <input id="judgement_date" type="date" value="2018-10-18">
+        <input id="debt_original" type="number" value="50.00" placeholder="Original Debt Amount">
+        <input id="pre_interest" placeholder="Pre-adjudication Interest">
+        <input id="attorney_fee" placeholder="Attorney Fees">
+        <input id="cost_fee" placeholder="Cost Fees">
+        <input id="post_interest" placeholder="Post-adjudication Interest">
+        <input id="delivery_fee_current" placeholder="Delivery Fee for This Writ">
+        <input id="issuance_fee_current" placeholder="Issuance Fee for This Writ">
+        <input id="search_fee_current" placeholder="Financial Search Fee">
+        <input id="search_fee_previous" placeholder="Past Financial Search Fees">
+        <input id="sheriff_fee" placeholder="Sheriff's Fees other Than Delivery Fees">
+        <br>
+        <input id="party_fee" placeholder="Prevailing Party Fee">
+        <input id="research_fee" placeholder="Research Fees">
+        <input id="other_fee" placeholder="Total “Other” from additional sheets (if used)">
+        <input id="issuance_fee_previous" placeholder="Past Writ Issuance Fees">
+        <input id="delivery_fee_previous" placeholder="Past Delivery Fees">
+        <input id="transcript_fee" placeholder="Transcript and Filing Fees for Other Counties">
+        <br>
+        <label for="branch_number">Branch Phone Number</label>
+        <input id="branch_number" type="tel" value="707.588.1511">
+        <label for="calculation_date">Calculation Date</label>
+        <input id="calculation_date" type="date" value="2018-10-18">
+        <br>
+        <button onclick="modifyPdf()">Save PDF</button>
         <p class="small">(Your browser will download the resulting file)</p>
     </body>
+
+    <footer>
+        <script src="main.js"></script>
+    </footer>
 </html>
