@@ -346,16 +346,16 @@ async function modifyPdf() {
         }
     }
 
-    data.court_county   = document.getElementById("court_county").value;
-    data.account_number = document.getElementById("account_number").value;
-    data.case_number    = document.getElementById("case_number").value;
-    data.money_maker[0] = document.getElementById("money_maker_a").value;
-    data.money_maker[1] = document.getElementById("money_maker_b").value;
-    data.money_maker[2] = document.getElementById("money_maker_c").value;
-    data.money_loser[0] = document.getElementById("money_loser_a").value;
-    data.money_loser[1] = document.getElementById("money_loser_b").value;
-    data.money_loser[2] = document.getElementById("money_loser_c").value;
-    data.amount_owed    = document.getElementById("amount_owed").value;
+    data.court_county   = document.getElementById("court_county").value.toUpperCase();
+    data.account_number = document.getElementById("account_number").value.toUpperCase();
+    data.case_number    = document.getElementById("case_number").value.toUpperCase();
+    data.money_maker[0] = document.getElementById("money_maker_a").value.toUpperCase();
+    data.money_maker[1] = document.getElementById("money_maker_b").value.toUpperCase();
+    data.money_maker[2] = document.getElementById("money_maker_c").value.toUpperCase();
+    data.money_loser[0] = document.getElementById("money_loser_a").value.toUpperCase();
+    data.money_loser[1] = document.getElementById("money_loser_b").value.toUpperCase();
+    data.money_loser[2] = document.getElementById("money_loser_c").value.toUpperCase();
+    data.amount_owed    = document.getElementById("amount_owed").value.toUpperCase();
     
     let count = 0;
     
@@ -363,11 +363,11 @@ async function modifyPdf() {
         if (maker != "") count++;
     }
 
-    data.main_maker.name = count == 1 ? data.money_maker[0] : document.getElementById("main_maker_name").value;
+    data.main_maker.name = count == 1 ? data.money_maker[0] : document.getElementById("main_maker_name").value.toUpperCase();
 
-    data.main_maker.street = document.getElementById("main_maker_address_street").value;
-    data.main_maker.zip    = document.getElementById("main_maker_address_zip").value;
-    data.main_maker.misc   = document.getElementById("main_maker_address_misc").value;
+    data.main_maker.street = document.getElementById("main_maker_address_street").value.toUpperCase();
+    data.main_maker.zip    = document.getElementById("main_maker_address_zip").value.toUpperCase();
+    data.main_maker.misc   = document.getElementById("main_maker_address_misc").value.toUpperCase();
 
     count = 0;
 
@@ -375,56 +375,56 @@ async function modifyPdf() {
         if (maker != "") count++;
     }
 
-    data.main_loser.name = count == 1 ? data.money_loser[0] : document.getElementById("main_loser_name").value;
+    data.main_loser.name = count == 1 ? data.money_loser[0] : document.getElementById("main_loser_name").value.toUpperCase();
 
-    data.main_loser.ssn    = document.getElementById("main_loser_ssn").value;
-    data.main_loser.street = document.getElementById("main_loser_address_street").value;
-    data.main_loser.zip    = document.getElementById("main_loser_address_zip").value;
-    data.main_loser.misc   = document.getElementById("main_loser_address_misc").value;
+    data.main_loser.ssn    = document.getElementById("main_loser_ssn").value.toUpperCase();
+    data.main_loser.street = document.getElementById("main_loser_address_street").value.toUpperCase();
+    data.main_loser.zip    = document.getElementById("main_loser_address_zip").value.toUpperCase();
+    data.main_loser.misc   = document.getElementById("main_loser_address_misc").value.toUpperCase();
 
     let location = zips_database[data.main_loser.zip];
 
-    data.main_loser.city   = location.city;
-    data.main_loser.county = location.county_name;
-    data.main_loser.state  = location.state_name;
+    data.main_loser.city   = location.city.toUpperCase();
+    data.main_loser.county = location.county_name.toUpperCase();
+    data.main_loser.state  = location.state_name.toUpperCase();
 
     location = zips_database[data.main_maker.zip];
 
-    data.main_maker.city   = location.city;
-    data.main_maker.county = location.county_name;
-    data.main_maker.state  = location.state_name;
+    data.main_maker.city   = location.city.toUpperCase();
+    data.main_maker.county = location.county_name.toUpperCase();
+    data.main_maker.state  = location.state_name.toUpperCase();
     
-    data.poe.name   = document.getElementById("poe_name").value;
-    data.poe.street = document.getElementById("poe_address_street").value;
-    data.poe.zip    = document.getElementById("poe_address_zip").value;
-    data.poe.misc   = document.getElementById("poe_address_misc").value;
+    data.poe.name   = document.getElementById("poe_name").value.toUpperCase();
+    data.poe.street = document.getElementById("poe_address_street").value.toUpperCase();
+    data.poe.zip    = document.getElementById("poe_address_zip").value.toUpperCase();
+    data.poe.misc   = document.getElementById("poe_address_misc").value.toUpperCase();
 
     location = zips_database[data.poe.zip];
 
-    data.poe.city   = location.city;
-    data.poe.county = location.county_name;
-    data.poe.state  = location.state_name;
+    data.poe.city   = location.city.toUpperCase();
+    data.poe.county = location.county_name.toUpperCase();
+    data.poe.state  = location.state_name.toUpperCase();
     
     data.judgement_date = new Date(document.getElementById("judgement_date").value);
-    data.debt_original = document.getElementById("debt_original").value;
-    data.pre_interest  = document.getElementById("pre_interest").value;
-    data.attorney_fee  = document.getElementById("attorney_fee").value;
-    data.cost_fee      = document.getElementById("cost_fee").value;
-    data.post_interest = document.getElementById("post_interest").value;
-    data.delivery_fee_current = document.getElementById("delivery_fee_current").value;
-    data.issuance_fee_current = document.getElementById("issuance_fee_current").value;
-    data.search_fee_current   = document.getElementById("search_fee_current").value;
-    data.search_fee_previous  = document.getElementById("search_fee_previous").value;
-    data.sheriff_fee  = document.getElementById("sheriff_fee").value;
-    data.party_fee    = document.getElementById("party_fee").value;
-    data.research_fee = document.getElementById("research_fee").value;
-    data.other_fee    = document.getElementById("other_fee").value;
-    data.issuance_fee_previous = document.getElementById("issuance_fee_previous").value;
-    data.delivery_fee_previous = document.getElementById("delivery_fee_previous").value;
-    data.transcript_fee = document.getElementById("transcript_fee").value;
+    data.debt_original = Number(document.getElementById("debt_original").value || "0");
+    data.pre_interest  = Number(document.getElementById("pre_interest").value || "0");
+    data.attorney_fee  = Number(document.getElementById("attorney_fee").value || "0");
+    data.cost_fee      = Number(document.getElementById("cost_fee").value || "0");
+    data.post_interest = Number(document.getElementById("post_interest").value || "0");
+    data.delivery_fee_current = Number(document.getElementById("delivery_fee_current").value || "0");
+    data.issuance_fee_current = Number(document.getElementById("issuance_fee_current").value || "0");
+    data.search_fee_current   = Number(document.getElementById("search_fee_current").value || "0");
+    data.search_fee_previous  = Number(document.getElementById("search_fee_previous").value || "0");
+    data.sheriff_fee  = Number(document.getElementById("sheriff_fee").value || "0");
+    data.party_fee    = Number(document.getElementById("party_fee").value || "0");
+    data.research_fee = Number(document.getElementById("research_fee").value || "0");
+    data.other_fee    = Number(document.getElementById("other_fee").value || "0");
+    data.issuance_fee_previous = Number(document.getElementById("issuance_fee_previous").value || "0");
+    data.delivery_fee_previous = Number(document.getElementById("delivery_fee_previous").value || "0");
+    data.transcript_fee = Number(document.getElementById("transcript_fee").value || "0");
     data.branch_number  = document.getElementById("branch_number").value;
     data.calculation_date = new Date(document.getElementById("calculation_date").value);
-    data.less_payments = document.getElementById("less_payments").value;
+    data.less_payments = Number(document.getElementById("less_payments").value || "0");
     
     form.getField("money_loser_a").setText(data.money_loser[0]);
     form.getField("money_loser_b").setText(data.money_loser[1]);
@@ -444,19 +444,19 @@ async function modifyPdf() {
         form.getField("money_maker_name_scrunch").setText(data.money_maker[0] + data.money_maker[1] + data.money_maker[2]);
     }
 
-    form.getField("court_address_street").setText(data.oregon_counties[data.court_county.toUpperCase()].street);
-    form.getField("court_address_city").setText(data.oregon_counties[data.court_county.toUpperCase()].city);
-    form.getField("court_address_county").setText(data.court_county);
-    form.getField("court_address_state").setText(data.oregon_counties[data.court_county.toUpperCase()].state);
+    form.getField("court_address_street").setText(data.oregon_counties[data.court_county.toUpperCase()].street.toUpperCase());
+    form.getField("court_address_city").setText(data.oregon_counties[data.court_county.toUpperCase()].city.toUpperCase());
+    form.getField("court_address_county").setText(data.court_county.toUpperCase());
+    form.getField("court_address_state").setText(data.oregon_counties[data.court_county.toUpperCase()].state.toUpperCase());
     form.getField("court_address_zip").setText(data.oregon_counties[data.court_county.toUpperCase()].zip);
 
     form.getField("poe_name").setText(data.poe.name);
     form.getField("poe_address_street").setText(data.poe.street);
-    form.getField("poe_address_city_state_zip").setText(`${data.main_maker.city}, ${data.main_maker.state}, ${data.main_maker.zip}`);
+    form.getField("poe_address_city_state_zip").setText(`${data.poe.city}, ${data.poe.state}, ${data.poe.zip}`);
     form.getField("poe_address_misc").setText(data.poe.misc);
 
     form.getField("main_loser_name").setText(data.main_loser.name);
-    form.getField("main_loser_last_four_ssn").setText(data.main_loser.ssn.slice(-4));
+    form.getField("main_loser_last_four_ssn").setText(data.main_loser.ssn);
 
     if (!(data.main_loser.street && data.main_loser.city && data.main_loser.state && data.main_loser.zip)) {
         form.getField("main_loser_address_missing").check();
@@ -467,7 +467,7 @@ async function modifyPdf() {
         form.getField("main_loser_address_zip").setText(data.main_loser.zip);
     }
 
-    form.getField("attorney_name").setText(data.attorney.name);
+    form.getField("attorney_name").setText(data.attorney.name.toUpperCase());
     form.getField("attorney_address_street")
     form.getField("attorney_address_city")
     form.getField("attorney_address_state")
@@ -482,42 +482,44 @@ async function modifyPdf() {
     form.getField("judgement_date_day_month").setText(`${data.judgement_date.getUTCMonth() + 1}/${data.judgement_date.getUTCDate()}`);
     form.getField("judgement_date_year").setText(`${data.judgement_date.getUTCFullYear()}`);
     
-    form.getField("debt_original").setText(data.debt_original);
-    form.getField("pre_interest").setText(data.pre_interest);
-    form.getField("attorney_fee").setText(data.attorney_fee);
-    form.getField("cost_fee").setText(data.cost_fee);
-    form.getField("post_interest").setText(data.post_interest);
-    form.getField("search_fee_current").setText(data.search_fee_current);
-    form.getField("search_fee_previous").setText(data.search_fee_previous);
-    form.getField("sheriff_fee").setText(data.sheriff_fee);
-    form.getField("party_free").setText(data.party_free);
-    form.getField("research_fee").setText(data.research_fee);
-    form.getField("other_fee").setText(data.other_fee);
-    form.getField("issuance_fee_current").setText(data.issuance_fee_current);
-    form.getField("delivery_fee_current").setText(data.delivery_fee_current);
-    form.getField("issuance_fee_previous").setText(data.issuance_fee_previous);
-    form.getField("transcript_fee").setText(data.transcript_fee);
+    form.getField("debt_original").setText(data.debt_original == 0 ? "" : data.debt_original.toLocaleString("en-us",{useGrouping:true, minimumFractionDigits:2}));
+    form.getField("pre_interest").setText(data.pre_interest == 0 ? "" : data.pre_interest.toLocaleString("en-us",{useGrouping:true, minimumFractionDigits:2}));
+    form.getField("attorney_fee").setText(data.attorney_fee == 0 ? "" : data.attorney_fee.toLocaleString("en-us",{useGrouping:true, minimumFractionDigits:2}));
+    form.getField("cost_fee").setText(data.cost_fee == 0 ? "" : data.cost_fee.toLocaleString("en-us",{useGrouping:true, minimumFractionDigits:2}));
+    form.getField("post_interest").setText(data.post_interest == 0 ? "" : data.post_interest.toLocaleString("en-us",{useGrouping:true, minimumFractionDigits:2}));
+    form.getField("search_fee_current").setText(data.search_fee_current == 0 ? "" : data.search_fee_current.toLocaleString("en-us",{useGrouping:true, minimumFractionDigits:2}));
+    form.getField("search_fee_previous").setText(data.search_fee_previous == 0 ? "" : data.search_fee_previous.toLocaleString("en-us",{useGrouping:true, minimumFractionDigits:2}));
+    form.getField("sheriff_fee").setText(data.sheriff_fee == 0 ? "" : data.sheriff_fee.toLocaleString("en-us",{useGrouping:true, minimumFractionDigits:2}));
+    form.getField("party_free").setText(data.party_fee == 0 ? "" : data.party_fee.toLocaleString("en-us",{useGrouping:true, minimumFractionDigits:2}));
+    form.getField("research_fee").setText(data.research_fee == 0 ? "" : data.research_fee.toLocaleString("en-us",{useGrouping:true, minimumFractionDigits:2}));
+    form.getField("other_fee").setText(data.other_fee == 0 ? "" : data.other_fee.toLocaleString("en-us",{useGrouping:true, minimumFractionDigits:2}));
+    form.getField("issuance_fee_current").setText(data.issuance_fee_current == 0 ? "" : data.issuance_fee_current.toLocaleString("en-us",{useGrouping:true, minimumFractionDigits:2}));
+    form.getField("delivery_fee_current").setText(data.delivery_fee_current == 0 ? "" : data.delivery_fee_current.toLocaleString("en-us",{useGrouping:true, minimumFractionDigits:2}));
+    form.getField("delivery_fee_previous").setText(data.delivery_fee_previous == 0 ? "" : data.delivery_fee_previous.toLocaleString("en-us",{useGrouping:true, minimumFractionDigits:2}));
+    form.getField("issuance_fee_previous").setText(data.issuance_fee_previous == 0 ? "" : data.issuance_fee_previous.toLocaleString("en-us",{useGrouping:true, minimumFractionDigits:2}));
+    form.getField("transcript_fee").setText(data.transcript_fee == 0 ? "" : data.transcript_fee.toLocaleString("en-us",{useGrouping:true, minimumFractionDigits:2}));
 
-    const subtotal = Number(data.debt_original) +
-                     Number(data.pre_interest || "0") +
-                     Number(data.attorney_fee || "0") +
-                     Number(data.cost_fee || "0") +
-                     Number(data.post_interest || "0") +
-                     Number(data.search_fee_current || "0") +
-                     Number(data.search_fee_previous || "0") +
-                     Number(data.sheriff_fee || "0") +
-                     Number(data.party_free || "0") +
-                     Number(data.research_fee || "0") +
-                     Number(data.other_fee || "0") +
-                     Number(data.issuance_fee_current || "0") +
-                     Number(data.delivery_fee_current || "0") +
-                     Number(data.issuance_fee_previous || "0") +
-                     Number(data.transcript_fee || "0")
-
-    form.getField("subtotal").setText(subtotal.toLocaleString("en-US", { minimumFractionDigits: 2 }));
-    form.getField("less_payments").setText((data.less_payments || 0).toLocaleString("en-US", { minimumFractionDigits: 2 }));
-    form.getField("total_amount_owed").setText((subtotal - Number(data.less_payments || "0")).toLocaleString("en-US", { minimumFractionDigits: 2 }));
-    form.getField("branch_number").setText(data.branch_number);
+    const subtotal = data.debt_original +
+                     data.pre_interest +
+                     data.attorney_fee +
+                     data.cost_fee +
+                     data.post_interest +
+                     data.search_fee_current +
+                     data.search_fee_previous +
+                     data.sheriff_fee  +
+                     data.party_fee +
+                     data.research_fee +
+                     data.other_fee +
+                     data.issuance_fee_current +
+                     data.delivery_fee_current +
+                     data.issuance_fee_previous  +
+                     data.transcript_fee
+    console.log(subtotal, data)
+    form.getField("subtotal").setText(subtotal.toLocaleString("en-us",{useGrouping:true, minimumFractionDigits:2}));
+    form.getField("less_payments").setText((data.less_payments || 0).toLocaleString("en-us",{useGrouping:true, minimumFractionDigits:2}));
+    form.getField("total_amount_owed").setText((subtotal - Number(data.less_payments || "0")).toLocaleString("en-us",{useGrouping:true, minimumFractionDigits:2}));
+    let str_num = ""+data.branch_number;
+    form.getField("branch_number").setText(`(${str_num.slice(0, 3)}) ${str_num.slice(3,6)}-${str_num.slice(6,10)}`);
 
     const date = new Date();
 
@@ -525,6 +527,12 @@ async function modifyPdf() {
     form.getField("calculation_date_year").setText(`${(""+data.calculation_date.getUTCFullYear()).slice(1)}`);
     form.getField("calculation_date_day_month").setText(`${data.calculation_date.getUTCMonth() + 1}/${data.calculation_date.getUTCDate()}`);
     
+    const sig_fetch = await fetch("signature.png");
+    const sig_bytes = await sig_fetch.arrayBuffer();
+    const sig = await doc.embedPng(sig_bytes);
+
+    form.getField("signature_bounds").setImage(sig);
+
     form.updateFieldAppearances(font);
 
     //Serialize the PDFDocument to bytes (a Uint8Array)
