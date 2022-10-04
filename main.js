@@ -424,7 +424,8 @@ async function modifyPdf() {
     data.transcript_fee = document.getElementById("transcript_fee").value;
     data.branch_number  = document.getElementById("branch_number").value;
     data.calculation_date = new Date(document.getElementById("calculation_date").value);
-
+    data.less_payments = document.getElementById("less_payments").value;
+    
     form.getField("money_loser_a").setText(data.money_loser[0]);
     form.getField("money_loser_b").setText(data.money_loser[1]);
     form.getField("money_loser_c").setText(data.money_loser[2]);
