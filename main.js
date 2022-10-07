@@ -4,6 +4,41 @@ async function main() {
 
 }
 
+const files = {}
+
+document.getElementById("clear").addEventListener("click", e => {
+    for (const element of document.getElementsByTagName("input")) {
+        element.value = ""
+    }
+})
+
+document.getElementById("signature").addEventListener("change", e => {
+    const reader = new FileReader()
+    
+    reader.readAsArrayBuffer(e.target.files[0]);
+
+    reader.addEventListener("load", e => {
+        files.signature = e.target.result;
+    })
+})
+
+document.getElementById("template").addEventListener("change", e => {
+    const reader = new FileReader()
+
+    reader.readAsArrayBuffer(e.target.files[0]);
+    
+    reader.addEventListener("load", e => {
+        files.template = e.target.result;
+    })
+})
+
+function onFileSelected(e) {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+}
+
 function filterDropdown() {
     const value   = document.getElementById("court_county").value.toUpperCase();
     const content = document.getElementById("dropdown_content");
@@ -67,9 +102,9 @@ document.getElementById("add_money_loser").addEventListener("click", e => {
 })
 
 async function modifyPdf() {
-    const raw  = await fetch('/template.pdf')
-    const buf  = await raw.arrayBuffer();
-    const doc  = await PDFDocument.load(buf);
+    //const raw  = await fetch('/template.pdf')
+    //const buf  = await raw.arrayBuffer();
+    const doc  = await PDFDocument.load(files.template);
     const font = await doc.embedFont(StandardFonts.TimesRoman);
     const form = doc.getForm();
 
@@ -527,9 +562,9 @@ async function modifyPdf() {
     form.getField("calculation_date_year").setText(`${(""+data.calculation_date.getUTCFullYear()).slice(1)}`);
     form.getField("calculation_date_day_month").setText(`${data.calculation_date.getUTCMonth() + 1}/${data.calculation_date.getUTCDate()}`);
     
-    const sig_fetch = await fetch("signature.png");
-    const sig_bytes = await sig_fetch.arrayBuffer();
-    const sig = await doc.embedPng(sig_bytes);
+    //const sig_fetch = await fetch("signature.png");
+    //const sig_bytes = await sig_fetch.arrayBuffer();
+    const sig = await doc.embedPng(files.signature);
 
     form.getField("signature_bounds").setImage(sig);
 
