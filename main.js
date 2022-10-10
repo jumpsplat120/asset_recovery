@@ -33,6 +33,49 @@ class AlertError extends CustomError {
         alert(alert_msg);
     }
 }
+
+class County {
+    #name;
+    #city;
+    #zip;
+    #street;
+    #state;
+    #misc;
+
+    constructor(name, city, zip, street, state, misc) {
+        this.#name   = name;
+        this.#city   = city;
+        this.#zip    = Number(zip);
+        this.#street = street;
+        this.#state  = state;
+        this.#misc   = misc;
+        
+        if (!this.#name) throw new AlertError("County is missing county name.");
+        if (!this.#city) throw new AlertError(`${this.#name} is missing a city.`);
+        if (!this.#zip)  throw new AlertError(`${this.#name} is missing a zip.`);
+        if (this.#zip == NaN) throw new AlertError(`${this.#name} has an invalid zip; ${this.zip}`);
+        if (this.#zip.toString().length != 5) throw new AlertError(`${this.#name} has a zip code of an invalid length. Zip codes should be 5 digits long, but '${this.zip}' is ${this.zip.toString().length} digits long.`);
+        if (!this.#street) throw new AlertError(`${this.#name} is missing a street address.`);
+        if (!this.#state) throw new  AlertError(`${this.#name} is missing a state.`);
+        if (this.#state.length == 2) throw new AlertError(`${this.#name}'s state is using two character state notation. The full state name should be entered.`);
+        
+        const lookup = zips_database[this.#zip.toString()];
+
+        if (!lookup) throw new AlertError(`${this.#name} has an invalid zip code.`);
+        if (lookup.state_name.toLowerCase() != this.#state.toLowerCase()) throw new AlertError(`${this.#name}'s state did not match state in zips database. Lookup found ${lookup.state_name}, but County object has ${this.#state}.`);
+        if (lookup.city.toLowerCase() != this.#city.toLowerCase()) throw new AlertError(`${this.#name}'s city did not match city in zips database. Lookup found ${lookup.city}, but County object has ${this.#city}.`);
+        if (lookup.county_name.toLowerCase() != this.#name.toLowerCase()) throw new AlertError(`${this.#name}'s county did not match county in zips database. Lookup found ${lookup.county_name}, but County object has ${this.#name}.`);
+    }
+
+    get name() { return this.#name.toUpperCase(); }
+    get city() { return this.#city.toUpperCase(); }
+    get zip()  { return this.#zip.toString();     }
+    get street() { return this.#street.toUpperCase(); }
+    get state()  { return this.#state.toUpperCase();  }
+    get misc()   { return this.#misc.toUpperCase();   }
+
+    get state_shortcode() { return zips_database[this.#zip.toString()].state_id; }
+}
 function filterDropdown() {
     const value   = document.getElementById("court_county").value.toUpperCase();
     const content = document.getElementById("dropdown_content");
