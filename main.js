@@ -20,6 +20,19 @@ class AbstractError extends CustomError {
     }
 }
 
+class AlertError extends CustomError {
+    constructor(...message) {
+        super(message);
+
+        let alert_msg = "Error! ";
+
+        for (const val of message) {
+            alert_msg = `${alert_msg} ${val.toString()}`
+        }
+
+        alert(alert_msg);
+    }
+}
 function filterDropdown() {
     const value   = document.getElementById("court_county").value.toUpperCase();
     const content = document.getElementById("dropdown_content");
