@@ -76,6 +76,8 @@ class County {
 
     get state_shortcode() { return zips_database[this.#zip.toString()].state_id; }
 }
+
+const elements       = {}
 const court_counties = {}
 
 court_counties.baker     = new County("Baker", "Baker City", 97814, "1995 3rd St", "Oregon", "Ste. 220");
@@ -141,6 +143,17 @@ function filterDropdown() {
 document.getElementById("court_county").addEventListener("input", e => {
     filterDropdown();
 });
+//Memoize elements, and shorten event listener code
+function listen(event, func, ...el_array) {
+    for (const element_id of el_array) {
+        const element = elements[element_id] || document.getElementById(element_id);
+
+        elements[element_id] = element;
+
+        element.addEventListener(event, func);
+    }
+}
+
 
 document.getElementById("court_county").addEventListener("keydown", e => {
     if (e.key != "Enter") return;
