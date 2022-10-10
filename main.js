@@ -422,4 +422,9 @@ async function main() {
     }, "save_pdf");
 }
 
-main();
+//Fire after everything has loaded
+document.addEventListener('readystatechange', e => {
+    if (e.target.readyState === "complete") {
+        main();
+    }
+});
