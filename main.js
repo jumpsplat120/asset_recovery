@@ -1,7 +1,23 @@
 const { degrees, PDFDocument, rgb, StandardFonts } = PDFLib
 
 async function main() {
+class CustomError extends Error {
+    constructor(...message) {
+        super(...message);
+        if (this.constructor === CustomError) {
+            throw new AbstractError("Unable to instantiate the 'CustomError' class directly.");
+        } else {
+            this.name = this.constructor.name;
+        }
+    }
 
+    toString() { return `${this.name}: ${this.message}`; }
+}
+
+class AbstractError extends CustomError {
+    constructor(m = "This is an abstract class, and can not be instantiated directly.", ...essage) {
+        super(m, ...essage);
+    }
 }
 
 function filterDropdown() {
