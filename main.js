@@ -76,6 +76,45 @@ class County {
 
     get state_shortcode() { return zips_database[this.#zip.toString()].state_id; }
 }
+const court_counties = {}
+
+court_counties.baker     = new County("Baker", "Baker City", 97814, "1995 3rd St", "Oregon", "Ste. 220");
+court_counties.benton    = new County("Benton", "Corvallis", 97330, "120 NW 4th St", "Oregon");
+court_counties.clackamas = new County("Clackamas", "Oregon City", 97045, "807 Main St", "Oregon");
+court_counties.clatsop   = new County("Clatsop", "Astoria", 97103, "749 Commercial St", "Oregon", "Ste. 6");
+court_counties.columbia  = new County("Columbia", "Saint Helens", 97051, "230 Strand St", "Oregon");
+court_counties.coos      = new County("Coos", "Coquille", 97423, "250 N Baxter St", "Oregon");
+court_counties.crook     = new County("Crook", "Prineville", 97754, "300 NE 3rd St", "Oregon", "#21");
+court_counties.curry     = new County("Curry", "Gold Beach", 97444, "29821 Ellensburg Ave", "Oregon");
+court_counties.deschutes = new County("Deschutes", "Bend", 97703, "1100 NW Bond St", "Oregon");
+court_counties.douglas   = new County("Douglas", "Roseburg", 97470, "1036 SE Douglas Ave", "Oregon", "#201");
+court_counties.gilliam   = new County("Gilliam", "Condon", 97823, "221 S Oregon St", "Oregon");
+court_counties.grant     = new County("Grant", "Canyon City", 97820, "201 S Humbolt St", "Oregon");
+court_counties.harney    = new County("Harney", "Burns", 97720, "450 N Buena Vista Ave", "Oregon");
+court_counties["HOOD RIVER"] = new County("Hood River", "Hood River", 97031, "309 E State St", "Oregon");
+court_counties.jackson   = new County("Jackson", "Medford", 97501, "100 S Oakdale Ave", "Oregon");
+court_counties.jefferson = new County("Jefferson", "Madras", 97741, "129 SW E St", "Oregon");
+court_counties.josephine = new County("Josephine", "Grants Pass", 97526, "500 NW 6th Street", "Oregon");
+court_counties.klamath = new County("Klamath", "Klamath Falls", 97601, "316 Main St", "Oregon");
+court_counties.lake    = new County("Lake", "Lakeview", 97630, "513 Center St", "Oregon");
+court_counties.lane    = new County("Lane", "Eugene", 97401, "125 E 8th Ave", "Oregon");
+court_counties.lincoln = new County("Lincoln", "Newport", 97365, "225 W Olive St", "Oregon", "#201");
+court_counties.linn    = new County("Linn", "Albany", 97321, "300 SW 4th Ave", "Oregon");
+court_counties.malheur = new County("Malheur", "Vale", 97918, "251 B St W", "Oregon");
+court_counties.marion  = new County("Marion", "Salem", 97301, "100 High St NE", "Oregon");
+court_counties.morrow    = new County("Morrow", "Heppner", 97836, "100 Court St", "Oregon");
+court_counties.multnomah = new County("Multnomah", "Portland", 97204, "1200 SW 1st Ave", "Oregon");
+court_counties.polk      = new County("Polk", "Dallas", 97338, "850 S Main St", "Oregon");
+court_counties.sherman   = new County("Sherman", "Moro", 97039, "500 Court St", "Oregon");
+court_counties.tillamook = new County("Tillamook", "Tillamook", 97141, "201 Laurel Ave", "Oregon");
+court_counties.umatilla  = new County("Umatilla", "Hermiston", 97838, "915 SE Columbia Dr", "Oregon");
+court_counties.union     = new County("Union", "La Grande", 97850, "1105 K Ave", "Oregon");
+court_counties.wallowa   = new County("Wallowa", "Enterprise", 97828, "101 S River St", "Oregon", "#204");
+court_counties.wasco     = new County("Wasco", "The Dalles", 97058, "511 Washington St", "Oregon", "#201");
+court_counties.washington = new County("Washington", "Hillsboro", 97124, "145 NE 2nd Ave", "Oregon");
+court_counties.wheeler = new County("Wheeler", "Fossil", 97830, "701 Adams St", "Oregon", "#204");
+court_counties.yamhill = new County("Yamhill", "McMinnville", 97128, "535 NE 5th St", "Oregon");
+
 function filterDropdown() {
     const value   = document.getElementById("court_county").value.toUpperCase();
     const content = document.getElementById("dropdown_content");
