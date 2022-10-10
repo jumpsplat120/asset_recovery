@@ -154,11 +154,17 @@ function listen(event, func, ...el_array) {
     }
 }
 
+//get element by id, memoize
+function eid(id) { 
+    const element = elements[id] || document.getElementById(id);
 
 document.getElementById("court_county").addEventListener("keydown", e => {
     if (e.key != "Enter") return;
+    elements[id] = element;
 
     const value = e.target.value.toUpperCase();
+    return element;
+}
 
     for (const button of document.getElementById("dropdown_content").getElementsByTagName("button")) {
         if (button.textContent.toUpperCase().indexOf(value) > -1) {
