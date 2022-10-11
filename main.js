@@ -161,6 +161,13 @@ function eid(id) {
     return element;
 }
 
+//get the uppercase value of an id.
+function getValue(id) {
+    const entry = eid(id).value.toUpperCase();
+
+    return entry == "" ? undefined : entry;
+}
+
 async function main() {
     //Add event to add text to input when clicking button dropdown
     for (const button of eid("dropdown_content").getElementsByTagName("button")) {
