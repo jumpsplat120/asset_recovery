@@ -214,6 +214,8 @@ async function main() {
 
         const data = {};
         
+        let count, location;
+
         data.money_maker = [];
         data.money_loser = [];
 
@@ -221,7 +223,8 @@ async function main() {
         data.main_loser = {};
         data.main_maker = {};
         data.poe        = {};
-        
+        data.fees       = {};
+
         data.attorney.name   = "William D. Schaub, P.C."
         data.attorney.city   = "";
         data.attorney.state  = "";
@@ -230,86 +233,73 @@ async function main() {
         data.attorney.zip    = "";
         data.attorney.bar    = "770697";
 
-        data.court_county   = eid("court_county").value.toUpperCase();
-        data.account_number = eid("account_number").value.toUpperCase();
-        data.case_number    = eid("case_number").value.toUpperCase();
-        data.money_maker[0] = eid("money_maker_a").value.toUpperCase();
-        data.money_maker[1] = eid("money_maker_b").value.toUpperCase();
-        data.money_maker[2] = eid("money_maker_c").value.toUpperCase();
-        data.money_loser[0] = eid("money_loser_a").value.toUpperCase();
-        data.money_loser[1] = eid("money_loser_b").value.toUpperCase();
-        data.money_loser[2] = eid("money_loser_c").value.toUpperCase();
-        data.amount_owed    = eid("amount_owed").value.toUpperCase();
-        
-        let count = 0;
-        
-        for (const maker of data.money_maker) {
-            if (maker != "") count++;
+        for (const [key, value] of Object.entries(data.attorney)) {
+            data[key] = value.toUpperCase();
         }
+        //get all html inputs
+        data.court_county   = getValue("court_county");
+        data.account_number = getValue("account_number");
+        data.case_number    = getValue("case_number");
+        data.money_maker[0] = getValue("money_maker_a");
+        data.money_maker[1] = getValue("money_maker_b");
+        data.money_maker[2] = getValue("money_maker_c");
+        data.money_loser[0] = getValue("money_loser_a");
+        data.money_loser[1] = getValue("money_loser_b");
+        data.money_loser[2] = getValue("money_loser_c");
+        //data.amount_owed    = getValue("amount_owed");
+        data.main_maker.street = getValue("main_maker_address_street");
+        data.main_maker.zip    = getValue("main_maker_address_zip");
+        data.main_maker.misc   = getValue("main_maker_address_misc");
+        data.main_loser.ssn    = getValue("main_loser_ssn");
+        data.main_loser.street = getValue("main_loser_address_street");
+        data.main_loser.zip    = getValue("main_loser_address_zip");
+        data.main_loser.misc   = getValue("main_loser_address_misc");
+        data.poe.name   = getValue("poe_name");
+        data.poe.street = getValue("poe_address_street");
+        data.poe.zip    = getValue("poe_address_zip");
+        data.poe.misc   = getValue("poe_address_misc");
+        data.fee.original_debt = getValue("debt_original");
+        data.fee.less_payments = getValue("less_payments");
+        data.fee.transcript = getValue("transcript_fee");
+        data.fee.attorney   = getValue("attorney_fee");
+        data.fee.cost       = getValue("cost_fee");
+        data.fee.sheriff    = getValue("sheriff_fee");
+        data.fee.party      = getValue("party_fee");
+        data.fee.research   = getValue("research_fee");
+        data.fee.other      = getValue("other_fee");
+        data.fee.interest.pre      = getValue("pre_interest");
+        data.fee.interest.post     = getValue("post_interest");
+        data.fee.delivery.current  = getValue("delivery_fee_current");
+        data.fee.issuance.current  = getValue("issuance_fee_current");
+        data.fee.search.current    = getValue("search_fee_current");
+        data.fee.issuance.previous = getValue("issuance_fee_previous");
+        data.fee.delivery.previous = getValue("delivery_fee_previous");
+        data.fee.search.previous   = getValue("search_fee_previous");
+        data.date.calculation = getValue("calculation_date");
+        data.date.judgement   = getValue("judgement_date");
+        data.branch_number    = getValue("branch_number");
 
-        data.main_maker.name = count == 1 ? data.money_maker[0] : eid("main_maker_name").value.toUpperCase();
+        data.main_maker.name = data.money_maker.length == 1 ? data.money_maker[0] : getValue("main_maker_name");
+        data.main_loser.name = data.money_loser.length == 1 ? data.money_loser[0] : getValue("main_loser_name");
 
-        data.main_maker.street = eid("main_maker_address_street").value.toUpperCase();
-        data.main_maker.zip    = eid("main_maker_address_zip").value.toUpperCase();
-        data.main_maker.misc   = eid("main_maker_address_misc").value.toUpperCase();
+        location = zips_database[data.main_loser.zip];
 
-        count = 0;
-
-        for (const maker of data.money_loser) {
-            if (maker != "") count++;
-        }
-
-        data.main_loser.name = count == 1 ? data.money_loser[0] : eid("main_loser_name").value.toUpperCase();
-
-        data.main_loser.ssn    = eid("main_loser_ssn").value.toUpperCase();
-        data.main_loser.street = eid("main_loser_address_street").value.toUpperCase();
-        data.main_loser.zip    = eid("main_loser_address_zip").value.toUpperCase();
-        data.main_loser.misc   = eid("main_loser_address_misc").value.toUpperCase();
-
-        let location = zips_database[data.main_loser.zip];
-
-        data.main_loser.city   = location.city.toUpperCase();
-        data.main_loser.county = location.county_name.toUpperCase();
-        data.main_loser.state  = location.state_name.toUpperCase();
+        data.main_loser.city   = location.city;
+        data.main_loser.county = location.county_name;
+        data.main_loser.state  = location.state_name;
 
         location = zips_database[data.main_maker.zip];
 
-        data.main_maker.city   = location.city.toUpperCase();
-        data.main_maker.county = location.county_name.toUpperCase();
-        data.main_maker.state  = location.state_name.toUpperCase();
-        
-        data.poe.name   = eid("poe_name").value.toUpperCase();
-        data.poe.street = eid("poe_address_street").value.toUpperCase();
-        data.poe.zip    = eid("poe_address_zip").value.toUpperCase();
-        data.poe.misc   = eid("poe_address_misc").value.toUpperCase();
+        data.main_maker.city   = location.city;
+        data.main_maker.county = location.county_name;
+        data.main_maker.state  = location.state_name;
 
         location = zips_database[data.poe.zip];
 
-        data.poe.city   = location.city.toUpperCase();
-        data.poe.county = location.county_name.toUpperCase();
-        data.poe.state  = location.state_name.toUpperCase();
-        
-        data.judgement_date = new Date(eid("judgement_date").value);
-        data.debt_original = Number(eid("debt_original").value || "0");
-        data.pre_interest  = Number(eid("pre_interest").value || "0");
-        data.attorney_fee  = Number(eid("attorney_fee").value || "0");
-        data.cost_fee      = Number(eid("cost_fee").value || "0");
-        data.post_interest = Number(eid("post_interest").value || "0");
-        data.delivery_fee_current = Number(eid("delivery_fee_current").value || "0");
-        data.issuance_fee_current = Number(eid("issuance_fee_current").value || "0");
-        data.search_fee_current   = Number(eid("search_fee_current").value || "0");
-        data.search_fee_previous  = Number(eid("search_fee_previous").value || "0");
-        data.sheriff_fee  = Number(eid("sheriff_fee").value || "0");
-        data.party_fee    = Number(eid("party_fee").value || "0");
-        data.research_fee = Number(eid("research_fee").value || "0");
-        data.other_fee    = Number(eid("other_fee").value || "0");
-        data.issuance_fee_previous = Number(eid("issuance_fee_previous").value || "0");
-        data.delivery_fee_previous = Number(eid("delivery_fee_previous").value || "0");
-        data.transcript_fee = Number(eid("transcript_fee").value || "0");
-        data.branch_number  = eid("branch_number").value;
-        data.calculation_date = new Date(eid("calculation_date").value);
-        data.less_payments = Number(eid("less_payments").value || "0");
-        
+        data.poe.city   = location.city;
+        data.poe.county = location.county_name;
+        data.poe.state  = location.state_name;
+
         form.getField("money_loser_a").setText(data.money_loser[0]);
         form.getField("money_loser_b").setText(data.money_loser[1]);
         form.getField("money_loser_c").setText(data.money_loser[2]);
