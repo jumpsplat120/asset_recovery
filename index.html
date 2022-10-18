@@ -258,6 +258,15 @@
         get state_shortcode() { return zips_database[this.#zip.toString()].state_id; }
     }
 
+    //push unless value === undefined
+    function condPush(array, value) {
+        if (value === undefined) return array;
+
+        array[array.length] = value;
+
+        return array;
+    }
+
     function listen(event, func, ...el_array) {
         for (const element_id of el_array) {
             const element = elements[element_id] || document.getElementById(element_id);
@@ -407,13 +416,13 @@
         data.poe.zip           = getValue("poe_address_zip");
         data.poe.misc          = getValue("poe_address_misc");
 
-        data.money_maker.push(getValue("money_maker_a"));
-        data.money_maker.push(getValue("money_maker_b"));
-        data.money_maker.push(getValue("money_maker_c"));
+        condPush(data.money_maker, getValue("money_maker_a"));
+        condPush(data.money_maker, getValue("money_maker_b"));
+        condPush(data.money_maker, getValue("money_maker_c"));
 
-        data.money_loser.push(getValue("money_loser_a"));
-        data.money_loser.push(getValue("money_loser_b"));
-        data.money_loser.push(getValue("money_loser_c"));
+        condPush(data.money_loser, getValue("money_loser_a"));
+        condPush(data.money_loser, getValue("money_loser_b"));
+        condPush(data.money_loser, getValue("money_loser_c"));
 
         data.fee.original_debt     = Number(getValue("debt_original") || 0);
         data.fee.less_payments     = Number(getValue("less_payments") || 0);
@@ -463,6 +472,8 @@
         form.getField("money_maker_a").setText(data.money_maker[0] || "");
         form.getField("money_maker_b").setText(data.money_maker[1] || "");
         form.getField("money_maker_c").setText(data.money_maker[2] || "");
+        
+        form.getField("money_maker_b_c").setText(data.money_maker[1] || data.money_maker[2] ? `${data.money_maker[1]}${data.money_maker[2] || `, ${data.money_maker[2]}`}` : "");
 
         form.getField("main_maker_name").setText(data.main_maker.name || "");
         form.getField("main_maker_address_street").setText(data.main_maker.street || "");
@@ -548,6 +559,7 @@
         form.getField("subtotal").setText(subtotal.toLocaleString("en-us",{useGrouping:true, minimumFractionDigits:2}));
         form.getField("less_payments").setText((data.fee.less_payments || 0).toLocaleString("en-us",{useGrouping:true, minimumFractionDigits:2}));
         form.getField("total_amount").setText((subtotal - Number(data.fee.less_payments || "0")).toLocaleString("en-us",{useGrouping:true, minimumFractionDigits:2}));
+        form.getField("total_amount2").setText((subtotal - Number(data.fee.less_payments || "0")).toLocaleString("en-us",{useGrouping:true, minimumFractionDigits:2}));
         form.getField("branch_number").setText(`(${str_num.slice(0, 3)}) ${str_num.slice(3,6)}-${str_num.slice(6,10)}`);
 
         const date = new Date();
