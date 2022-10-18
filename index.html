@@ -570,30 +570,17 @@
 
         form.getField("signature_bounds").setImage(sig);
 
-        //If not explicit, then form just won't update. Used to work without this,
-        //but something changed and fields end up blank until clicked on, so this
-        //solves that. Fuck adobe lol
-        //form.acroForm.dict.set(PDFName.of('NeedAppearances'), PDFBool.True);
-
         //Make sure all fields fill using times new roman
         form.updateFieldAppearances(font);
-
-        ////Save new form
-        //const bytes = await doc.save();
-
-        ////load new doc now that it has the saved signature
-        //const doc2  = await PDFDocument.load(bytes);
-        //const sig   = await doc2.embedPng(data.files.signature);
-        //const form2 = doc2.getForm();
-
-        ////place signature into image fields
-        //form2.getField("sig_bounds_af_image").setImage(sig);
 
         //save template as uint
         const result = await doc.save();
 
         //Trigger the browser to download the PDF document
         download(result, "filled_writ.pdf", "application/pdf");
+
+        data.money_maker = [];
+        data.money_loser = [];
     }
   </script>
 </html>
